@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7daecf">
+  <title>Panel · StressLess</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="sidebar-backdrop" id="backdrop"></div>
+
+  <div class="app-shell">
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <a class="brand-logo" href="index.html"><img src="assets/img/logo.png" alt="StressLess"> StressLess</a>
+
+      <nav class="side-nav" aria-label="Secciones">
+        <button class="side-link active" data-view="inicio"><i class="fa-solid fa-house"></i> Inicio</button>
+        <button class="side-link" data-view="evaluacion"><i class="fa-solid fa-clipboard-list"></i> Evaluación</button>
+        <button class="side-link" data-view="pantalla"><i class="fa-solid fa-mobile-screen"></i> Tiempo de pantalla</button>
+        <button class="side-link" data-view="bienestar"><i class="fa-solid fa-spa"></i> Bienestar y sonidos</button>
+        <button class="side-link" data-view="progreso"><i class="fa-solid fa-chart-line"></i> Progreso</button>
+        <div class="side-divider"></div>
+        <button class="side-link" data-view="perfil"><i class="fa-solid fa-user"></i> Perfil</button>
+      </nav>
+
+      <div class="side-user">
+        <div class="side-avatar" id="sideAvatar">?</div>
+        <div>
+          <div class="side-user-name" id="sideUserName">Usuario</div>
+          <div class="side-user-mail" id="sideUserMail">correo@ejemplo.com</div>
+        </div>
+      </div>
+      <button class="logout-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+    </aside>
+
+    <!-- ===================== MAIN ===================== -->
+    <main class="main">
+      <div class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      </div>
+
+      <!-- ---------- INICIO ---------- -->
+      <section class="view active" id="view-inicio">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1 id="saludo">Hola</h1>
+          <p>Este es el resumen de tu bienestar hoy.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon f-blue" style="background:#e7f1f8;color:#5f95ba;"><i class="fa-solid fa-fire"></i></div>
+            <div class="stat-label">Racha actual</div>
+            <div class="stat-value" id="homeStreak">0 días</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fbf1dd;color:#a97e33;"><i class="fa-solid fa-gauge-high"></i></div>
+            <div class="stat-label">Nivel de estrés</div>
+            <div class="stat-value" id="homeStress">— <span class="badge" id="homeStressBadge">Sin datos</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e6f5ed;color:#7cc09b;"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div class="stat-label">Uso de pantalla</div>
+            <div class="stat-value" id="homeScreen">— h</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#efeffb;color:#9997d6;"><i class="fa-solid fa-face-smile"></i></div>
+            <div class="stat-label">Estado de ánimo</div>
+            <div class="stat-value" id="homeMood">—</div>
+          </div>
+        </div>
+
+        <div class="card diary-box">
+          <h3>¿Qué te trajo paz hoy?</h3>
+          <p class="muted">Escribe una nota rápida en tu mini-diario.</p>
+          <textarea id="diaryText" placeholder="Hoy me sentí en calma cuando..."></textarea>
+          <div style="margin-top:12px;">
+            <button class="btn btn-primary" id="saveDiaryBtn">Guardar nota</button>
+          </div>
+          <ul class="diary-list" id="diaryList"></ul>
+        </div>
+
+        <div class="card">
+          <h3>Accesos rápidos</h3>
+          <p class="muted">Continúa cuidando tu bienestar.</p>
+          <div class="quick-links">
+            <button class="quick-link" data-view="evaluacion"><i class="fa-solid fa-clipboard-list"></i> Evaluar estrés</button>
+            <button class="quick-link" data-view="pantalla"><i class="fa-solid fa-mobile-screen"></i> Tiempo de pantalla</button>
+            <button class="quick-link" data-view="bienestar"><i class="fa-solid fa-spa"></i> Respirar y sonidos</button>
+            <button class="quick-link" data-view="progreso"><i class="fa-solid fa-chart-line"></i> Ver progreso</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- EVALUACION ---------- -->
+      <section class="view" id="view-evaluacion">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1>Evaluación de estrés</h1>
+          <p>Responde con sinceridad; no hay respuestas correctas o incorrectas.</p>
+        </div>
+
+        <div class="card" id="testCard">
+          <div class="progress-bar-outer"><div class="progress-bar-inner" id="testProgress"></div></div>
+          <div class="question-count" id="questionCount">Pregunta 1 de 15</div>
+          <div class="question-text" id="questionText">Cargando…</div>
+          <div class="options" id="optionsList"></div>
+          <div class="test-actions">
+            <button class="btn btn-primary" id="nextQuestionBtn" disabled>Siguiente</button>
+          </div>
+        </div>
+
+        <div class="card result-hero" id="resultCard" style="display:none;">
+          <div class="stat-label">Nivel de estrés</div>
+          <div class="result-level" id="resultLevel">—</div>
+          <div class="result-score" id="resultScore">Puntaje —/45</div>
+          <p id="resultMsg" style="margin-top:14px;"></p>
+          <ul class="reco-list" id="resultRecos"></ul>
+          <div style="margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-ghost" id="repeatTestBtn">Repetir test</button>
+            <button class="btn btn-primary" data-view="progreso">Ver mi progreso</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- TIEMPO DE PANTALLA ---------- -->
+      <section class="view" id="view-pantalla">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1>Tiempo de pantalla</h1>
+          <p>Cuéntanos cuánto usas cada dispositivo al día.</p>
+        </div>
+
+        <div class="card">
+          <div class="slider-field">
+            <label>Celular <span id="celularVal">3 h</span></label>
+            <input type="range" id="celular" min="0" max="16" value="3">
+          </div>
+          <div class="slider-field">
+            <label>Computadora <span id="compuVal">3 h</span></label>
+            <input type="range" id="computadora" min="0" max="16" value="3">
+          </div>
+          <div class="slider-field">
+            <label>Televisión <span id="tvVal">1 h</span></label>
+            <input type="range" id="tv" min="0" max="16" value="1">
+          </div>
+          <button class="btn btn-primary" id="analizarPantallaBtn">Analizar</button>
+        </div>
+
+        <div class="card" id="pantallaResultado" style="display:none;">
+          <h3>Resultado</h3>
+          <div class="total-ring-wrap">
+            <div class="stat-label">Tiempo total diario</div>
+            <div class="stat-value" id="pantallaTotal">0 horas</div>
+            <span class="badge" id="pantallaBadge">—</span>
+          </div>
+          <ul class="reco-list" style="margin-top:20px;">
+            <li><i class="fa-solid fa-hourglass-half"></i> Descansa la vista cada hora.</li>
+            <li><i class="fa-solid fa-eye"></i> Regla 20-20-20: cada 20 min, mira algo a 6 metros por 20 segundos.</li>
+            <li><i class="fa-solid fa-arrow-trend-down"></i> Intenta reducir 1 hora diaria esta semana.</li>
+          </ul>
+        </div>
+
+        <div class="card pomodoro">
+          <h3>Enfoque Pomodoro</h3>
+          <p class="muted">25 minutos de concentración. Al iniciar se activa el Modo Zen.</p>
+          <div class="pomo-clock" id="pomoClock">25:00</div>
+          <div class="pomo-state" id="pomoState">Listo para empezar</div>
+          <div class="pomo-actions">
+            <button class="btn btn-primary" id="pomoStart">Iniciar</button>
+            <button class="btn btn-ghost" id="pomoReset">Reiniciar</button>
+          </div>
+          <p class="zen-hint">Modo Zen activo · toca "Pausar" para salir.</p>
+        </div>
+      </section>
+
+      <!-- ---------- BIENESTAR Y SONIDOS ---------- -->
+      <section class="view" id="view-bienestar">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1>Bienestar y sonidos</h1>
+          <p>Pequeñas pausas que marcan una gran diferencia.</p>
+        </div>
+
+        <div class="card">
+          <h3>¿Cómo te sientes hoy?</h3>
+          <p class="muted">Registrar tu ánimo te ayuda a notar patrones con el tiempo.</p>
+          <div class="mood-row" id="moodRow">
+            <button class="mood-btn" data-mood="5" data-label="Muy bien" title="Muy bien">😀</button>
+            <button class="mood-btn" data-mood="4" data-label="Bien" title="Bien">🙂</button>
+            <button class="mood-btn" data-mood="3" data-label="Neutral" title="Neutral">😐</button>
+            <button class="mood-btn" data-mood="2" data-label="Mal" title="Mal">😔</button>
+            <button class="mood-btn" data-mood="1" data-label="Muy mal" title="Muy mal">😢</button>
+          </div>
+          <button class="btn btn-primary" id="guardarAnimoBtn">Guardar ánimo</button>
+          <p class="ok-msg" id="animoMsg" style="margin-top:12px;"></p>
+        </div>
+
+        <div class="card">
+          <h3>Respiración guiada</h3>
+          <div class="breathing-exercise">
+            <div class="breathe-wrap" aria-hidden="true">
+              <div class="breathe-ring r3" style="border-color:rgba(125,174,207,.4);"></div>
+              <div class="breathe-ring r2" style="border-color:rgba(125,174,207,.4);"></div>
+              <div class="breathe-ring r1" style="border-color:rgba(125,174,207,.4);"></div>
+              <div class="breathe-core" id="breatheCore" style="background:var(--primary);color:#fff;">Inhala</div>
+            </div>
+            <div class="breathe-instructions">Sigue el círculo: inhala, sostén y exhala lentamente.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Sonidos relajantes</h3>
+          <p class="muted">Reproduce un sonido en bucle para acompañar tus pausas.</p>
+          <div class="sound-grid" id="soundGrid">
+            <button class="sound-btn" data-sound="lluvia"><i class="fa-solid fa-cloud-rain"></i> Lluvia</button>
+            <button class="sound-btn" data-sound="rio"><i class="fa-solid fa-water"></i> Río</button>
+            <button class="sound-btn" data-sound="olas"><i class="fa-solid fa-umbrella-beach"></i> Olas</button>
+            <button class="sound-btn" data-sound="bosque"><i class="fa-solid fa-tree"></i> Bosque</button>
+            <button class="sound-btn" data-sound="viento"><i class="fa-solid fa-wind"></i> Viento</button>
+            <button class="sound-btn" data-sound="instrumental"><i class="fa-solid fa-music"></i> Instrumental</button>
+          </div>
+          <div class="volume-row">
+            <i class="fa-solid fa-volume-low" style="color:var(--ink-soft);"></i>
+            <input type="range" id="volume" min="0" max="1" step="0.05" value="0.7">
+            <i class="fa-solid fa-volume-high" style="color:var(--ink-soft);"></i>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Actividades recomendadas</h3>
+          <div class="wellness-grid" style="margin-top:14px;">
+            <div class="wellness-card"><div class="icon"><i class="fa-solid fa-lungs"></i></div><h4>Respiración</h4><p>3 min de respiración profunda.</p></div>
+            <div class="wellness-card"><div class="icon"><i class="fa-solid fa-person-walking"></i></div><h4>Caminar</h4><p>15 min al aire libre.</p></div>
+            <div class="wellness-card"><div class="icon"><i class="fa-solid fa-glass-water"></i></div><h4>Hidratación</h4><p>Toma un vaso de agua.</p></div>
+            <div class="wellness-card"><div class="icon"><i class="fa-solid fa-bed"></i></div><h4>Dormir</h4><p>Prioriza 7-8 horas.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- PROGRESO ---------- -->
+      <section class="view" id="view-progreso">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1>Tu progreso</h1>
+          <p>Así ha evolucionado tu bienestar esta semana.</p>
+        </div>
+
+        <div class="chart-wrap">
+          <h3>Nivel de estrés</h3>
+          <canvas id="stressChart" height="90"></canvas>
+        </div>
+        <div class="chart-wrap">
+          <h3>Horas de pantalla</h3>
+          <canvas id="screenChart" height="90"></canvas>
+        </div>
+        <div class="chart-wrap">
+          <h3>Estado de ánimo</h3>
+          <canvas id="moodChart" height="90"></canvas>
+        </div>
+      </section>
+
+      <!-- ---------- PERFIL ---------- -->
+      <section class="view" id="view-perfil">
+        <div class="page-head" style="margin-bottom:22px;">
+          <h1>Perfil</h1>
+          <p>Actualiza tu información y preferencias.</p>
+        </div>
+
+        <div class="card">
+          <div class="profile-form">
+            <div class="avatar-upload">
+              <div class="avatar-preview" id="avatarPreview"><i class="fa-solid fa-user"></i></div>
+              <div>
+                <label class="btn btn-ghost" for="fotoInput" style="font-size:13px;padding:9px 16px;">Cambiar foto</label>
+                <input type="file" id="fotoInput" accept="image/*" style="display:none;">
+              </div>
+            </div>
+            <div class="field"><label for="perfilNombre">Nombre</label><input type="text" id="perfilNombre"></div>
+            <div class="field"><label for="perfilEdad">Edad</label><input type="number" id="perfilEdad" min="1" max="120"></div>
+            <div class="field"><label for="perfilCorreo">Correo</label><input type="email" id="perfilCorreo" disabled></div>
+            <div class="field"><label for="perfilSueno">Horas de sueño</label><input type="number" id="perfilSueno" min="0" max="14"></div>
+            <button class="btn btn-primary" id="guardarPerfilBtn">Guardar cambios</button>
+            <p class="ok-msg" id="perfilMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Apariencia</h3>
+          <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer;">
+            <input type="checkbox" id="darkModeToggle" style="width:20px;height:20px;accent-color:var(--primary);">
+            Activar modo oscuro
+          </label>
+        </div>
+
+        <div class="card">
+          <h3>Borrar mis datos</h3>
+          <p class="muted">Elimina tu historial de bienestar guardado en este dispositivo.</p>
+          <button class="btn btn-ghost" id="borrarDatosBtn" style="color:#b56464;border-color:#e29a9a;">Borrar historial</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <audio id="ambientAudio" loop></audio>
+
+  <script src="scripts/config.js"></script>
+  <script src="scripts/store.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
