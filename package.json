@@ -1,12 +1,13 @@
 {
   "name": "stressless",
   "version": "1.0.0",
-  "description": "StressLess — aplicación web de bienestar mental y manejo del estrés (SPA vanilla JS + Supabase opcional).",
+  "description": "Aplicación web de bienestar mental y manejo del estrés para el curso de Desarrollo Web.",
+  "author": "Jamela y Anjali",
   "private": true,
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js"
   },
-  "keywords": ["bienestar", "estres", "mindfulness", "spa", "supabase"],
+  "keywords": ["bienestar", "estres", "mindfulness", "spa", "salud-mental"],
   "license": "MIT"
 }
