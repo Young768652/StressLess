@@ -1,15 +1,9 @@
-/* ============================================================
-   StressLess · auth.css
-   Estilos de las pantallas de acceso (login y registro).
-   ============================================================ */
-
 .auth-page {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-/* Panel visual (izquierda) */
 .auth-visual {
   position: relative;
   color: #fff;
@@ -39,7 +33,6 @@
 }
 .back-home:hover { opacity: 0.85; }
 
-/* Respiracion decorativa */
 .breathe-wrap {
   position: relative;
   width: 160px;
@@ -71,7 +64,6 @@
   50% { transform: scale(1.1); opacity: 1; }
 }
 
-/* Panel del formulario (derecha) */
 .auth-form-wrap {
   display: grid;
   place-items: center;

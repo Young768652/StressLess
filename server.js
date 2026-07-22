@@ -1,9 +1,3 @@
-/* ============================================================
-   StressLess · server.js
-   Servidor estatico minimo (sin dependencias) que sirve la
-   carpeta /public. Punto de entrada: public/index.html
-   ============================================================ */
-
 const http = require("http");
 const fs = require("fs");
 const path = require("path");

@@ -1,14 +1,6 @@
-/* ============================================================
-   StressLess · app.js
-   Controlador principal del dashboard SPA. Orquesta la
-   navegacion y cada modulo (inicio, evaluacion, pantalla,
-   bienestar, progreso, perfil).
-   ============================================================ */
-
 (function () {
   const Store = window.Store;
 
-  // --------- Guard de sesion ---------
   const user = Store.currentUser();
   if (!user) {
     window.location.href = "login.html";
@@ -19,9 +11,6 @@
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-  /* ============================================================
-     NAVEGACION SPA
-     ============================================================ */
   const charts = {};
   function goTo(view) {
     $$(".view").forEach((v) => v.classList.remove("active"));
@@ -39,7 +28,6 @@
     el.addEventListener("click", () => goTo(el.getAttribute("data-view")));
   });
 
-  // --------- Menu movil ---------
   const sidebar = $("#sidebar");
   const backdrop = $("#backdrop");
   function closeSidebar() {
@@ -52,15 +40,11 @@
   });
   backdrop.addEventListener("click", closeSidebar);
 
-  // --------- Cerrar sesion ---------
   $("#logoutBtn").addEventListener("click", () => {
     Store.clearSession();
     window.location.href = "login.html";
   });
 
-  /* ============================================================
-     PERFIL DE USUARIO (barra lateral + saludo)
-     ============================================================ */
   function paintUser() {
     const u = Store.currentUser();
     $("#sideUserName").textContent = u.nombre || "Usuario";
@@ -78,9 +62,6 @@
     }
   }
 
-  /* ============================================================
-     INICIO: metricas + diario
-     ============================================================ */
   function paintHome() {
     const d = Store.getData();
     $("#homeStreak").textContent = `${d.racha.dias} día${d.racha.dias === 1 ? "" : "s"}`;
@@ -127,9 +108,6 @@
     saveToSupabase("diario", { texto });
   });
 
-  /* ============================================================
-     EVALUACION: test de 15 preguntas
-     ============================================================ */
   const preguntas = [
     "¿Sientes que te cuesta relajarte últimamente?",
     "¿Te has sentido nervioso/a o con la mente muy activa?",
@@ -235,9 +213,6 @@
     saveToSupabase("evaluaciones", { puntaje: escala, nivel });
   }
 
-  /* ============================================================
-     TIEMPO DE PANTALLA
-     ============================================================ */
   const sliders = { celular: "celularVal", computadora: "compuVal", tv: "tvVal" };
   Object.entries(sliders).forEach(([id, labelId]) => {
     const input = document.getElementById(id);
@@ -263,9 +238,6 @@
     saveToSupabase("pantalla", { total });
   });
 
-  /* ============================================================
-     POMODORO + MODO ZEN
-     ============================================================ */
   let pomoSeg = 25 * 60;
   let pomoTimer = null;
   let pomoRunning = false;
@@ -314,9 +286,6 @@
     $("#pomoState").textContent = "Listo para empezar";
   });
 
-  /* ============================================================
-     BIENESTAR: animo, respiracion y sonidos
-     ============================================================ */
   let moodSel = null;
   $$("#moodRow .mood-btn").forEach((b) => {
     b.addEventListener("click", () => {
@@ -336,7 +305,6 @@
     saveToSupabase("animo", moodSel);
   });
 
-  // Respiracion guiada (ciclo de texto)
   const fases = [
     { txt: "Inhala", ms: 4000 },
     { txt: "Sostén", ms: 4000 },
@@ -354,7 +322,6 @@
   }
   ciclarRespiracion();
 
-  // Reproductor de sonidos en bucle
   const audio = $("#ambientAudio");
   let sonandoActual = null;
   $$("#soundGrid .sound-btn").forEach((btn) => {
@@ -376,9 +343,6 @@
   });
   $("#volume").addEventListener("input", (e) => (audio.volume = Number(e.target.value)));
 
-  /* ============================================================
-     PROGRESO: graficos Chart.js
-     ============================================================ */
   const dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
   function serie(arr, fallbackBase) {
     return dias.map((_, i) => arr[i] ?? fallbackBase(i));
@@ -412,9 +376,6 @@
     cfg("moodChart", "animo", "line", "#b1b0e1", "rgba(177,176,225,0.2)", (i) => 3 + (i % 2), 5);
   }
 
-  /* ============================================================
-     PERFIL: datos, foto, tema, borrar
-     ============================================================ */
   function loadProfile() {
     const u = Store.currentUser();
     $("#perfilNombre").value = u.nombre || "";
@@ -445,7 +406,6 @@
     reader.readAsDataURL(file);
   });
 
-  // Modo oscuro
   const darkToggle = $("#darkModeToggle");
   const settings = Store.getSettings();
   document.body.classList.toggle("dark", !!settings.dark);
@@ -455,7 +415,6 @@
     Store.setSettings({ ...Store.getSettings(), dark: darkToggle.checked });
   });
 
-  // Borrar datos
   $("#borrarDatosBtn").addEventListener("click", () => {
     if (!confirm("¿Seguro que quieres borrar tu historial de bienestar?")) return;
     Store.updateData((d) => {
@@ -469,9 +428,6 @@
     alert("Historial borrado.");
   });
 
-  /* ============================================================
-     UTILIDADES
-     ============================================================ */
   function pushHistorial(arr, valor) {
     arr.push(valor);
     if (arr.length > 7) arr.shift();
@@ -495,9 +451,6 @@
     }
   }
 
-  /* ============================================================
-     ARRANQUE
-     ============================================================ */
   paintUser();
   paintHome();
   loadProfile();

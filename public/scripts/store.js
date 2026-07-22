@@ -1,10 +1,3 @@
-/* ============================================================
-   StressLess · store.js
-   Capa de datos compartida. Abstrae el almacenamiento para que
-   el resto de la app no dependa directamente de localStorage.
-   Expone window.Store.
-   ============================================================ */
-
 (function () {
   const KEYS = {
     users: "sl_usuarios",
@@ -23,7 +16,6 @@
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  /* ---------- Usuarios y sesion ---------- */
   function getUsers() {
     return read(KEYS.users, []);
   }
@@ -60,7 +52,7 @@
       id: "u_" + Date.now(),
       nombre,
       correo,
-      password, // Proyecto educativo: no almacenar contrasenas en texto plano en produccion.
+      password, 
       edad: "",
       horasSueno: "",
       foto: "",
@@ -82,13 +74,12 @@
     return { ok: true, user };
   }
 
-  /* ---------- Datos de bienestar del usuario ---------- */
   function emptyData() {
     return {
-      estres: null, // { puntaje, nivel, fecha }
-      pantalla: null, // { total, detalle, fecha }
-      animoHoy: null, // { valor, etiqueta, fecha }
-      diario: [], // [{ texto, fecha }]
+      estres: null, 
+      pantalla: null,
+      animoHoy: null,
+      diario: [],
       racha: { dias: 0, ultimaFecha: null },
       historial: {
         estres: [],
@@ -113,7 +104,6 @@
     saveUser(user);
   }
 
-  /* ---------- Configuracion (tema, etc.) ---------- */
   function getSettings() {
     return read(KEYS.settings, { dark: false });
   }
@@ -121,7 +111,6 @@
     write(KEYS.settings, next);
   }
 
-  /* ---------- Utilidad de racha (estilo Duolingo) ---------- */
   function touchStreak() {
     updateData((d) => {
       const hoy = new Date().toDateString();

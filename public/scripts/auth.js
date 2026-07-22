@@ -1,9 +1,3 @@
-/* ============================================================
-   StressLess · auth.js
-   Logica compartida de login y registro. Detecta el formulario
-   presente en la pagina y aplica validaciones.
-   ============================================================ */
-
 (function () {
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -17,7 +11,6 @@
     if (el) el.classList.toggle("has-error", show);
   }
 
-  /* ---------- Registro ---------- */
   const registroForm = document.getElementById("registroForm");
   if (registroForm) {
     registroForm.addEventListener("submit", (e) => {
@@ -53,7 +46,6 @@
     });
   }
 
-  /* ---------- Login ---------- */
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {

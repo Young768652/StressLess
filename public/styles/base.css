@@ -1,32 +1,20 @@
-/* ============================================================
-   StressLess · base.css
-   Design system: tokens, resets, typography and shared UI.
-   Paleta anti-estrés (psicología del color):
-   - Fondo menta claro, tarjetas blancas, azul serenidad,
-     verde menta saludable y lavanda suave para acciones.
-   ============================================================ */
-
 :root {
-  /* Colores base */
-  --bg: #f4f7f6;          /* Blanco menta claro */
-  --card: #ffffff;        /* Blanco puro */
-  --primary: #7daecf;     /* Azul serenidad */
+  --bg: #f4f7f6;
+  --card: #ffffff; 
+  --primary: #7daecf;    
   --primary-dark: #5f95ba;
-  --healthy: #9cd3b4;     /* Verde menta pastel */
+  --healthy: #9cd3b4;
   --healthy-dark: #7cc09b;
-  --action: #b1b0e1;      /* Lavanda suave */
+  --action: #b1b0e1; 
   --action-dark: #9997d6;
 
-  /* Neutros (nunca negro puro) */
-  --ink: #3b4a52;         /* Texto principal */
-  --ink-soft: #6a7b83;    /* Texto secundario */
-  --line: #e6eeeb;        /* Bordes suaves */
+  --ink: #3b4a52;    
+  --ink-soft: #6a7b83; 
+  --line: #e6eeeb; 
 
-  /* Estados */
   --warn: #e6b566;
   --danger: #e29a9a;
 
-  /* Forma y profundidad */
   --radius: 16px;
   --radius-sm: 12px;
   --radius-lg: 24px;
@@ -55,7 +43,6 @@ a { color: inherit; text-decoration: none; }
 
 img { max-width: 100%; display: block; }
 
-/* ---------- Botones ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -95,7 +82,6 @@ img { max-width: 100%; display: block; }
 
 .btn-block { width: 100%; }
 
-/* ---------- Tarjetas ---------- */
 .card {
   background: var(--card);
   border-radius: var(--radius);
@@ -103,7 +89,6 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow);
 }
 
-/* ---------- Badges ---------- */
 .badge {
   display: inline-block;
   font-size: 12px;
@@ -117,7 +102,6 @@ img { max-width: 100%; display: block; }
 .badge-mod { background: #fbf1dd; color: #a97e33; }
 .badge-high { background: #fbe6e6; color: #b56464; }
 
-/* ---------- Utilidades ---------- */
 .container { width: min(1180px, 92%); margin: 0 auto; }
 .text-center { text-align: center; }
 .sr-only {
